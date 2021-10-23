@@ -65,13 +65,15 @@ router.get("*", (req, res) => {
 
 app.use("/", router);
 
+const PORT = process.env.PORT || 4000;
+
 const startServer = async () => {
   await mongoose
     .connect(
       "mongodb+srv://gabriel:gabriel@cluster0.vut72.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
     )
     .then(() => console.log("connected to db"));
-  app.listen(4000, () => console.log("server up and running"));
+  app.listen(PORT, () => console.log("server up and running"));
 };
 
 startServer();
