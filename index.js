@@ -59,7 +59,7 @@ router.get("/api/download/:fileId", async (req, res) => {
   return res.download(absPath, file.originalname);
 });
 
-router.get("*", (req, res) => {
+app.get("*", (req, res) => {
   return res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
