@@ -26,7 +26,7 @@ const qrSchema = new mongoose.Schema({
 });
 const Qr = mongoose.model("Qr", qrSchema);
 
-router.post("/send", upload.single("file"), async (req, res) => {
+router.post("/api/send", upload.single("file"), async (req, res) => {
   console.log(req.file);
   const qr = await Qr.create({
     ...req.file,
@@ -44,14 +44,14 @@ router.post("/send", upload.single("file"), async (req, res) => {
   return res.json({ message: "file received", qr: qr });
 });
 
-router.get("/check/:fileId", async (req, res) => {
+router.get("/api/check/:fileId", async (req, res) => {
   const fileId = req.params.fileId;
   const file = await Qr.findOne({ filename: fileId });
   if (!file) return res.json({ file: false });
   return res.json({ file });
 });
 
-router.get("/download/:fileId", async (req, res) => {
+router.get("/api/download/:fileId", async (req, res) => {
   const fileId = req.params.fileId;
   const file = await Qr.findOne({ filename: fileId });
   const absPath = path.join(__dirname, file.path);
@@ -59,11 +59,12 @@ router.get("/download/:fileId", async (req, res) => {
   return res.download(absPath, file.originalname);
 });
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/build/index.html"));
+router.get("*", (req, res) => {
+  return res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-app.use("/api", router);
+app.use("/", router);
+
 const startServer = async () => {
   await mongoose
     .connect(
